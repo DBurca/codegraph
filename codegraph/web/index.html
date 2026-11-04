@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CodeGraph</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" defer></script>
+</head>
+<body>
+  <header id="toolbar">
+    <div class="brand">
+      <svg class="logo" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="9" width="7" height="6" rx="1.5"/><rect x="15" y="3" width="7" height="6" rx="1.5"/><rect x="15" y="15" width="7" height="6" rx="1.5"/><path d="M9 12h3m0 0V6h3m-3 6v6h3" fill="none"/></svg>
+      <button id="btnOpen" class="proj-btn" title="Open another project (⌘O)">
+        <span id="projName">CodeGraph</span>
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+      </button>
+      <span id="projStats"></span>
+    </div>
+    <div class="search-wrap">
+      <input id="search" type="search" placeholder="Search files &amp; functions…" autocomplete="off" spellcheck="false">
+      <kbd class="search-kbd">⌘K</kbd>
+      <div id="results" class="hidden"></div>
+    </div>
+    <div class="controls">
+      <div class="seg" id="layoutSeg" role="group" aria-label="Layout">
+        <button data-mode="flow" title="Entry points in the center; dependencies radiate outward">Flow</button>
+        <button data-mode="hubs" title="Most-depended-on files in the center">Hubs</button>
+      </div>
+      <button id="btnFit" title="Fit everything in view (F)">Fit</button>
+      <button id="btnRelayout" title="Re-run the layout (drops dragged positions)">Re-layout</button>
+      <div class="menu-wrap">
+        <button id="btnView" aria-haspopup="true">View ▾</button>
+        <div id="viewMenu" class="dropdown hidden">
+          <label><input type="checkbox" data-opt="orphans"> Unconnected files</label>
+          <label><input type="checkbox" data-opt="externals"> External packages</label>
+          <label><input type="checkbox" data-opt="css"> Stylesheets</label>
+          <label><input type="checkbox" data-opt="global"> Shared-global script links</label>
+          <label><input type="checkbox" data-opt="refs"> File-path references</label>
+          <hr>
+          <label><input type="checkbox" data-opt="transitive"> Focus follows whole chain</label>
+          <hr>
+          <div class="menu-row">Scroll wheel
+            <select data-opt="wheel"><option value="zoom">zooms</option><option value="pan">pans</option></select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main id="viewport" class="lv1">
+    <div id="world">
+      <svg id="edges" width="1" height="1"></svg>
+      <div id="nodes"></div>
+    </div>
+    <div id="empty" class="hidden"></div>
+  </main>
+
+  <aside id="panel" class="hidden"></aside>
+  <div id="legend"></div>
+  <div id="zoombar">
+    <button data-lv="0">Overview</button><button data-lv="1">Files</button><button data-lv="2">Details</button><button data-lv="3">Code</button>
+  </div>
+  <canvas id="minimap" width="220" height="150"></canvas>
+  <div id="picker" class="hidden" role="dialog" aria-modal="true" aria-labelledby="pkTitle">
+    <div class="pk-card">
+      <div class="pk-top">
+        <h2 id="pkTitle">Open a project</h2>
+        <button class="pk-x" id="pkClose" title="Close (Esc)">×</button>
+      </div>
+      <p class="pk-lead">Pick a folder or repo. CodeGraph maps how its Python, C/C++, JS/TS and HTML files connect.</p>
+      <button id="pkNative" class="pk-primary">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+        Choose folder…
+      </button>
+      <div class="pk-cols">
+        <section class="pk-browse">
+          <h3>Browse</h3>
+          <form id="pkForm" class="pk-path">
+            <input id="pkPath" type="text" spellcheck="false" autocomplete="off" placeholder="/path/to/project">
+            <button type="submit" id="pkGo">Go</button>
+          </form>
+          <div id="pkCrumbs" class="pk-crumbs"></div>
+          <div id="pkList" class="pk-list"></div>
+          <div class="pk-here">
+            <span id="pkHereInfo"></span>
+            <button id="pkOpenHere" class="pk-secondary">Open this folder</button>
+          </div>
+        </section>
+        <section class="pk-recent-wrap">
+          <h3>Recent</h3>
+          <div id="pkRecent" class="pk-recent"></div>
+        </section>
+      </div>
+      <div id="pkStatus" class="pk-status hidden"></div>
+    </div>
+  </div>
+
+  <div id="tooltip" class="hidden"></div>
+  <div id="toast" class="hidden"></div>
+  <div id="help">Drag to pan · scroll / pinch to zoom · click a file to focus · double-click to read its code · <kbd>F</kbd> fit · <kbd>Esc</kbd> clear</div>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -251,3 +251,7 @@ docs/screenshots/        images used in this README
 - Ignore-folders setting in the GUI, remembered per project
 - Git overlay: color by recent changes or churn, or highlight what a branch touched
 - More languages (Go, Rust, Java) via the same parser interface
+
+## License
+
+[MIT](LICENSE)
